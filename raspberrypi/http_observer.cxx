@@ -11,7 +11,7 @@ bool HttpObserver::open( std::string name ){
 void HttpObserver::close() const {
 	std::cout << "HttpObserver::close" << std::endl;
 }
-void HttpObserver::update(){
+void HttpObserver::update(std::vector<Reading*>){
 	std::cout << "HttpObserver::update" << std::endl;
 }
 

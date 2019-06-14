@@ -1,10 +1,12 @@
 
 #pragma once
+#include <vector>
+#include "reading.h"
 
 class Observer{
 	public:
 	virtual ~Observer() {};
 	virtual bool open(std::string name) = 0;
 	virtual void close() const = 0;
-	virtual void update() = 0;
+	virtual void update(std::vector<Reading*>) = 0;
 };
