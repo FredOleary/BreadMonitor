@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 		" starting at " << std::asctime(std::localtime(&start)) << 
 		" ending at " << std::asctime(std::localtime(&end)) << std::endl;
  	
-   	std::unique_ptr<HttpObserver> httpObserverPtr(new HttpObserver());
+   	std::unique_ptr<HttpObserver> httpObserverPtr(new HttpObserver(configuration));
  //	httpObserverPtr->open(configuration.getName());
 //	httpObserverPtr->close();
  	observers.push_back(httpObserverPtr.get());
