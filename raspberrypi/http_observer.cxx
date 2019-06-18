@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include "http_observer.h"
 #include "json_wrapper.h"	
 
@@ -31,19 +32,18 @@ HttpObserver::HttpObserver( Configuration configuration ){
 bool HttpObserver::open( std::string name ){
 	std::cout << "HttpObserver::open" << std::endl;
 	if(curl != NULL) {
-		JsonWrapper wrapperRequest;
-		wrapperRequest.addStringMember(std::string("name"), name);
-		std::string test = wrapperRequest.getJsonString();
-		std::cout << "TEST" << test << std::endl;
+		std::unique_ptr<JsonWrapper> wrapperRequest(JsonWrapper::Create());
+		wrapperRequest->addStringMember(std::string("name"), name);
+		std::string postData = wrapperRequest->getJsonString();
+		std::cout << "TEST" << postData		 << std::endl;
 		
 		std::string postResponse;		
-		std::string data = "{\"name\":\"foo\"}";
 		std::string url = serverBaseURL + "batches";
 		
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 		curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "POST");
-		curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, data.length());
-		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
+		curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, postData.length());
+		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postData.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, CurlWrite_CallbackFunc_StdString);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &postResponse);
 		
@@ -52,9 +52,9 @@ bool HttpObserver::open( std::string name ){
 			std::cout << "curl_easy_perform() failed" << curl_easy_strerror(res) << std::endl;
 			return false;
 		}
-		JsonWrapper wrapperResponse(postResponse);
+		std::unique_ptr<JsonWrapper> wrapperResponse(JsonWrapper::Create(postResponse));
 		
-		std::cout << "curl_easy_perform() succeeded: Response ID: " << wrapperResponse.getIntValue("id") << std::endl;
+		std::cout << "curl_easy_perform() succeeded: Response ID: " << wrapperResponse->getIntValue("id") << std::endl;
 		return true;
 	}else{
 		return false;
@@ -67,7 +67,10 @@ void HttpObserver::close() const {
 		curl_easy_cleanup(curl);
 	}
 }
-void HttpObserver::update(std::vector<Reading*>){
-	std::cout << "HttpObserver::update" << std::endl;
+void HttpObserver::update(std::vector<ReadingPtr> readings){
+	for (auto reading_it = readings.begin(); reading_it!=readings.end(); ++reading_it) {
+		std::cout << "HttpObserver::update " << (*reading_it)->getName() << " value: " << (*reading_it)->getValue() << std::endl;
+
+	}		
 }
 

@@ -13,6 +13,6 @@ class HttpObserver : public Observer{
 		HttpObserver( Configuration configuration);
 		bool open( std::string name );
 		void close() const;
-		void update(std::vector<Reading*>);
+		void update(std::vector<ReadingPtr>);
 
 };

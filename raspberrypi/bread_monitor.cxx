@@ -31,6 +31,7 @@
 #include "http_observer.h"
 #include "console_observer.h"
 #include "co2_sensor.h"
+#include "reading.h"
 #include "configuration.h"
 
 void parseOptions( int argc, char **argv, Configuration& configuration );
@@ -52,8 +53,6 @@ int main(int argc, char **argv)
 		" ending at " << std::asctime(std::localtime(&end)) << std::endl;
  	
    	std::unique_ptr<HttpObserver> httpObserverPtr(new HttpObserver(configuration));
- //	httpObserverPtr->open(configuration.getName());
-//	httpObserverPtr->close();
  	observers.push_back(httpObserverPtr.get());
 
    	std::unique_ptr<ConsoleObserver> ConsoleObserverPtr(new ConsoleObserver());
@@ -100,17 +99,22 @@ void run( Configuration& configuration, std::vector<Observer*> observers, std::v
 	for (auto it = observers.begin(); it!=observers.end(); ++it) {
 		(*it)->open( configuration.getName());
 	}	
-	while(1){
+	bool foo = true;
+	while(foo){
 		std::time_t currentTime = std::time(nullptr);
 		if( std::difftime( configuration.getEndTime(), currentTime ) > 0){
 			// Take sensor reading
-			std::cout << "Reading" << std::endl;
-			std::vector<Reading*> readings;
-			for (auto it = observers.begin(); it!=observers.end(); ++it) {
-				(*it)->update( readings);
+			std::cout << "Reading...." << std::endl;
+			for (auto sensor_it = sensors.begin(); sensor_it!=sensors.end(); ++sensor_it) {
+				std::vector<ReadingPtr> readings = (*sensor_it)->getReading();
+			
+				for (auto observer_it = observers.begin(); observer_it!=observers.end(); ++observer_it) {
+					(*observer_it)->update( readings);
+				}		
 			}		
 
-			sleep(10);
+			//sleep(10);
+			foo = false;
 		}else{
 			break;
 		}

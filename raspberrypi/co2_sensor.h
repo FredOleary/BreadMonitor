@@ -5,6 +5,6 @@ class CO2Sensor : public Sensor{
 	public:
 		bool open( std::string name );
 		void close();
-		std::vector<Reading> getReading();
+		std::vector<ReadingPtr> getReading();
 
 };

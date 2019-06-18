@@ -8,5 +8,5 @@ class Observer{
 	virtual ~Observer() {};
 	virtual bool open(std::string name) = 0;
 	virtual void close() const = 0;
-	virtual void update(std::vector<Reading*>) = 0;
+	virtual void update(std::vector<ReadingPtr>) = 0;
 };
