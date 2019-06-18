@@ -33,36 +33,39 @@
 #include "co2_sensor.h"
 #include "reading.h"
 #include "configuration.h"
+#include "console_logger.h"
 
 void parseOptions( int argc, char **argv, Configuration& configuration );
-void run( Configuration& configuration, std::vector<Observer*> observers, std::vector<Sensor*> sensors );
+void run( Configuration& configuration, Logger& logger, std::vector<Observer*> observers, std::vector<Sensor*> sensors );
 
 int main(int argc, char **argv)
 {
+	ConsoleLogger logger;
+	logger.error( "Error Message" );
+	logger.warning( "Warning Message" );
+		
 	Configuration configuration;
 	std::vector<Observer*> observers;
 	std::vector<Sensor*> sensors;
 	
-//	std::time_t start = std::time(nullptr);
 	parseOptions( argc, argv, configuration);
 	std::time_t start = configuration.getStartTime();
 	std::time_t end = configuration.getEndTime();
-
- 	std::cout << "BreadMonitor for " << configuration.getName() << 
-		" starting at " << std::asctime(std::localtime(&start)) << 
-		" ending at " << std::asctime(std::localtime(&end)) << std::endl;
+	
+	std::string startMessage = "BreadMonitor for " + configuration.getName() +
+		" starting at " + std::asctime(std::localtime(&start)) + 
+		" ending at " + std::asctime(std::localtime(&end)) ;
+	logger.info( startMessage );
  	
    	std::unique_ptr<HttpObserver> httpObserverPtr(new HttpObserver(configuration));
  	observers.push_back(httpObserverPtr.get());
 
-   	std::unique_ptr<ConsoleObserver> ConsoleObserverPtr(new ConsoleObserver());
+   	std::unique_ptr<ConsoleObserver> ConsoleObserverPtr(new ConsoleObserver(logger));
   	observers.push_back(ConsoleObserverPtr.get());
 	
   	std::unique_ptr<CO2Sensor> co2SensorPtr(new CO2Sensor());
-// 	co2SensorPtr->open(configuration.getName());
-//	co2SensorPtr->close();
  	sensors.push_back(co2SensorPtr.get());
- 	run( configuration, observers, sensors );
+ 	run( configuration, logger, observers, sensors );
 	
 	return 0;
 }
@@ -94,17 +97,20 @@ void parseOptions( int argc, char **argv, Configuration& configuration ){
 	}
 }
 
-void run( Configuration& configuration, std::vector<Observer*> observers, std::vector<Sensor*> sensors ){
+void run( Configuration& configuration, Logger& logger, std::vector<Observer*> observers, std::vector<Sensor*> sensors ){
 	// Open observers
 	for (auto it = observers.begin(); it!=observers.end(); ++it) {
-		(*it)->open( configuration.getName());
+		if( !(*it)->open( configuration.getName())){
+			// Observer failed: - exit
+			logger.error("Failed to open one or more observers - exiting....");
+		}
 	}	
 	bool foo = true;
 	while(foo){
 		std::time_t currentTime = std::time(nullptr);
 		if( std::difftime( configuration.getEndTime(), currentTime ) > 0){
 			// Take sensor reading
-			std::cout << "Reading...." << std::endl;
+			logger.info( "Reading....");
 			for (auto sensor_it = sensors.begin(); sensor_it!=sensors.end(); ++sensor_it) {
 				std::vector<ReadingPtr> readings = (*sensor_it)->getReading();
 			
@@ -113,8 +119,8 @@ void run( Configuration& configuration, std::vector<Observer*> observers, std::v
 				}		
 			}		
 
-			//sleep(10);
-			foo = false;
+			sleep(10);
+			//foo = false;
 		}else{
 			break;
 		}

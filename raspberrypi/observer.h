@@ -2,6 +2,7 @@
 #pragma once
 #include <vector>
 #include "reading.h"
+#include "logger.h"
 
 class Observer{
 	public:

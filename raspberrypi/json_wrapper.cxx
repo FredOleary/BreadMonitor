@@ -18,6 +18,9 @@ class JsonWrapperImpl : public JsonWrapper {
 		void addDoubleMember( std::string key, double value){
 			jsonInst[key.c_str()] = value;
 		}
+		void addIntMember( std::string key, int value){
+			jsonInst[key.c_str()] = value;
+		}
 
 		std::string getJsonString(){
 			return jsonInst.dump();

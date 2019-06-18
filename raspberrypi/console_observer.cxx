@@ -2,17 +2,23 @@
 #include <memory.h>
 #include "console_observer.h"
 	
-	
+ConsoleObserver::ConsoleObserver( Logger& loggerIn) : logger(loggerIn){
+
+}
 	
 bool ConsoleObserver::open( std::string name ){
-	std::cout << "console_observer::open" << std::endl;
+	logger.info( "console_observer::open");
 	return true;
 }	
 
 void ConsoleObserver::close() const {
-	std::cout << "console_observer::close" << std::endl;
+	logger.info( "console_observer::close" );
 }
-void ConsoleObserver::update(std::vector<ReadingPtr>){
-	std::cout << "console_observer::update" << std::endl;
+void ConsoleObserver::update(std::vector<ReadingPtr> readings){
+	for (auto reading_it = readings.begin(); reading_it!=readings.end(); ++reading_it) {
+		std::string value = std::to_string( (*reading_it)->getValue());
+		logger.info( "ConsoleObserver::update Name: " + (*reading_it)->getName() + " value: " + value );
+
+	}		
 }
 

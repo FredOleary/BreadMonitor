@@ -8,6 +8,7 @@ class HttpObserver : public Observer{
 		CURL *curl;	
 		CURLcode res;
 		std::string serverBaseURL;
+		int batchId;
 		
 	public:
 		HttpObserver( Configuration configuration);
