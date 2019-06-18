@@ -1,0 +1,19 @@
+.HomeView {
+    display: grid;
+    grid-template-rows: auto auto;
+    background-color: rgb(255, 255, 255);
+
+}
+
+.HomeViewToolbar {
+    grid-column: 1 ;
+    grid-row:1;
+}
+
+.HomeViewContent {
+    grid-column: 1;
+    grid-row:2;
+	padding: 3px;
+    background: rgb(0, 0 ,255);
+}
+
