@@ -1,10 +1,10 @@
 import React from 'react';
-
+import Toolbar from './Toolbar';
 
 export const HomeViewContainer = ({ component: Component, ...rest }) => (
 	<div className="HomeView">
         <div className="HomeViewToolbar">
-            <p>Hello toolbar</p>
+            <Toolbar/>
         </div>
         <div className="HomeViewContent">
             <p>Hello content</p>
