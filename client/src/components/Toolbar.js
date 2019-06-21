@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import Select from 'react-select';
-import {updateBatches} from '../actions/batchesAction';
+import {batchesActions} from '../actions/batchesAction';
 import { isPatternLike } from '@babel/types';
 import { connect } from "react-redux";
+import {bindActionCreators} from "redux";
 import { fromEventPattern } from 'rxjs';
 
 const breadLogo = require('.././images/bread_icon.png');
@@ -45,15 +46,16 @@ const mapStateToProps = state => {
   };
   function mapDispatchToProps(dispatch) {
     return {
-        updateBatches: batches => dispatch(updateBatches(batches))
+        batchesActions: bindActionCreators(batchesActions, dispatch)
     };
   }
   
 class ConnectedToolbar extends Component{
     componentDidMount() {
         console.log("ConnectedToolbar");
-        this.props.updateBatches( options);
-      }
+ //       this.props.batchesActions.updateBatches(options);
+        this.props.batchesActions.fetchBatches();
+     }
     render(){
         return (
             <div style = {toolbar} >
