@@ -22,12 +22,13 @@ const toolbar = {
 };
 
 const batchSelector = {
-    width:200,
+    width:300,
     backgroundColor: 'yellow',
 //    paddingLeft:'30px',
     marginLeft:'30px',
     marginTop:'auto',
     marginBottom:'auto',
+    textAlign:'left'
 };
 
 const logo = {
@@ -60,13 +61,16 @@ class ConnectedToolbar extends Component{
         return (
             <div style = {toolbar} >
                 <div style ={batchSelector}>
-                    <Select options={this.props.batches} onChange={this._onSelect}  />
+                    <Select options={this.props.batches} onChange={this.onSelectChange.bind(this)} />
                 </div>
                 <div style = {logo}>
                     <img style={imageStyle} src={breadLogo} />
                 </div>
             </div>
         )
+    }
+    onSelectChange( selectedItem ){
+        console.log(selectedItem);
     }
 }
 const Toolbar = connect(

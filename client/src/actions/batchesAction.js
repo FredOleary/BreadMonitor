@@ -12,7 +12,9 @@ function fetchBatches() {
 			.then(response => {
 				if(response.status === 200){
                     let batches = response.data.map( entry =>{
-                       return ({value:entry.id, label:entry.name});
+                        let batchDate = new Date(entry.createdAt);
+                        let label = entry.name + ' ' + batchDate.toLocaleString();
+                        return ({value:entry.id, label:label});
                     });
 					dispatch(updateBatches(batches));
 				}else{
