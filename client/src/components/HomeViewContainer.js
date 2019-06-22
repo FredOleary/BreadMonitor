@@ -1,5 +1,6 @@
 import React from 'react';
 import Toolbar from './Toolbar';
+import Co2Chart from './Co2Chart';
 
 export const HomeViewContainer = ({ component: Component, ...rest }) => (
 	<div className="HomeView">
@@ -7,7 +8,7 @@ export const HomeViewContainer = ({ component: Component, ...rest }) => (
             <Toolbar/>
         </div>
         <div className="HomeViewContent">
-            <p>Hello content</p>
+            <Co2Chart/>
         </div>
     </div>
 );

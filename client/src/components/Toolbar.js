@@ -45,11 +45,11 @@ const imageStyle ={
 const mapStateToProps = state => {
     return { batches: state.batches };
   };
-  function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch) {
     return {
         batchesActions: bindActionCreators(batchesActions, dispatch)
     };
-  }
+}
   
 class ConnectedToolbar extends Component{
     componentDidMount() {
@@ -70,7 +70,9 @@ class ConnectedToolbar extends Component{
         )
     }
     onSelectChange( selectedItem ){
-        console.log(selectedItem);
+        if( selectedItem){
+            this.props.batchesActions.fetchReadingsForBatch( selectedItem.value);
+        }
     }
 }
 const Toolbar = connect(
