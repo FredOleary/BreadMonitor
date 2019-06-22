@@ -18,15 +18,15 @@ class ConnectedCo2Chart extends Component {
                             yAxes: [{
                                 ticks: {
                                     beginAtZero:true,
-									max: 20.1,
+									max: 20,
 									stepSize: 5,
                                 }
                             }],
-                            xAxes: [{
-                                displayFormats: {
-                                    day: 'MMM D'
-                                }
-                            }]
+                            // xAxes: [{
+                            //     displayFormats: {
+                            //         day: 'MMM D'
+                            //     }
+                            // }]
 
                         },
                         title: {
