@@ -17,13 +17,13 @@ const options = [
 const defaultOption = options[1];
 
 const toolbar = {
-    backgroundColor: 'yellow' ,
+    backgroundColor: 'rgb(200,200,200)' ,
     display:'flex'
 };
 
 const batchSelector = {
     width:300,
-    backgroundColor: 'yellow',
+    backgroundColor: 'rgb(200,200,200)',
 //    paddingLeft:'30px',
     marginLeft:'30px',
     marginTop:'auto',
@@ -33,7 +33,7 @@ const batchSelector = {
 
 const logo = {
     width:50,
-    backgroundColor: 'yellow',
+    backgroundColor: 'rgb(200,200,200)',
     marginLeft: 'auto',
     marginRight: '30px'
 };

@@ -13,8 +13,8 @@
 .HomeViewContent {
     grid-column: 1;
     grid-row:2;
-	padding: 3px;
-    background: rgb(220, 220 ,255);
+/*	padding: 3px; */
+    background: rgb(230, 230 ,230);
 /*   height:100% */
 }
 
