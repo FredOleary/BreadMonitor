@@ -9,14 +9,17 @@ const initialState = {
     let newState;
     switch (action.type){
         case UPDATE_BATCH:
-            newState = {batches:action.batches, chartData:state.chartData, selectedBatch:{}};
+            newState = {...state}
+            newState.batches = action.batches;
             return newState;
         case UPDATE_READINGS:
-            newState = {batches:state.batches, chartData:action.chartData, selectedBatch:state.selectedBatch};
+            newState = {...state}
+            newState.chartData = action.chartData;
             return newState;
          case UPDATE_SELECTED_BATCH:
-            newState = {batches:state.batches, chartData:state.chartData, selectedBatch:action.selectedBatch};
-            return newState;
+            newState = {...state}
+            newState.selectedBatch = action.selectedBatch;
+          return newState;
        default:
             break;
     }
