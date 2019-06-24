@@ -1,9 +1,13 @@
-import { UPDATE_BATCH, UPDATE_READINGS } from "../constants/actionTypes";
+import { UPDATE_BATCH, UPDATE_READINGS, UPDATE_SELECTED_BATCH } from "../constants/actionTypes";
 import { axiosService } from '../services/axiosService';
-import { id } from "postcss-selector-parser";
+//import { id } from "postcss-selector-parser";
 
 function updateBatches(batches) {
     return { type: UPDATE_BATCH, batches }
+};
+
+function updateSelectedBatch(selectedBatch) {
+    return { type: UPDATE_SELECTED_BATCH, selectedBatch }
 };
 
 function updateReadings(readings) {
@@ -89,5 +93,6 @@ const createChartData = readings => {
 export const batchesActions = {
     updateBatches,
     fetchBatches,
-    fetchReadingsForBatch
+    fetchReadingsForBatch,
+    updateSelectedBatch
 }
