@@ -73,9 +73,11 @@ const createChartData = readings => {
         x_axis:[],
         datasets: []
     };
+    if( readings.length == 0 ){
+        return chartData;
+    }
     if( readings.co2.length > 0 ){
         chartData.labels = readings.createdAt;
-//        chartData.x_axis = readings.createdAt;
         let dataset = {};
         dataset.data = readings.co2;
         dataset.backgroundColor='rgb(53, 91, 183)';

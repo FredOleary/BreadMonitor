@@ -22,11 +22,12 @@ class ConnectedCo2Chart extends Component {
 									stepSize: 5,
                                 }
                             }],
-                            // xAxes: [{
-                            //     displayFormats: {
-                            //         day: 'MMM D'
-                            //     }
-                            // }]
+                            xAxes: [{
+                                ticks: {
+                                    autoSkip: true,
+                                    autoSkipPadding: 30
+                                }
+                            }]
 
                         },
                         title: {
