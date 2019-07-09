@@ -18,11 +18,11 @@ size_t CurlWrite_CallbackFunc_StdString(void *contents, size_t size, size_t nmem
     return newLength;
 }
 	
-HttpObserver::HttpObserver( Configuration configuration ){
+HttpObserver::HttpObserver( Logger& loggerIn, Configuration configuration ) : logger(loggerIn){
 	curl = curl_easy_init();
 	batchId = -1;
 	if(curl != NULL) {
-		std::cout << "Successfully initialized curl" << std::endl;		
+		logger.info("Successfully initialized curl");
 		struct curl_slist *headers = NULL;
 		headers = curl_slist_append(headers, "Accept: application/json");
 		headers = curl_slist_append(headers, "Content-Type: application/json;charset=utf-8");		
@@ -31,13 +31,13 @@ HttpObserver::HttpObserver( Configuration configuration ){
 	}
 }	
 bool HttpObserver::open( std::string name ){
-	std::cout << "HttpObserver::open" << std::endl;
+	logger.info( "HttpObserver::open" );
 	if(curl != NULL) {
 		try{
 			std::unique_ptr<JsonWrapper> wrapperRequest(JsonWrapper::Create());
 			wrapperRequest->addStringMember(std::string("name"), name);
 			std::string postData = wrapperRequest->getJsonString();
-			std::cout << "TEST" << postData		 << std::endl;
+			logger.info( std::string("HttpObserver::open - Batch: " + postData ) );
 			
 			std::string postResponse;		
 			std::string url = serverBaseURL + "batches";
@@ -51,15 +51,15 @@ bool HttpObserver::open( std::string name ){
 			
 			res = curl_easy_perform(curl);
 			if(res != CURLE_OK){
-				std::cout << "curl_easy_perform() failed" << curl_easy_strerror(res) << std::endl;
+				logger.error( std::string("HttpObserver::update curl_easy_perform() failed") + std::string( curl_easy_strerror(res)) );
 				return false;
 			}
 			std::unique_ptr<JsonWrapper> wrapperResponse(JsonWrapper::Create(postResponse));
 			batchId = wrapperResponse->getIntValue("id");
-			std::cout << "curl_easy_perform() succeeded: Response ID: " << batchId << std::endl;
+			logger.info( std::string( "HttpObserver::update curl_easy_perform() succeeded: Response ID: ") + std::to_string( batchId ));
 			return true;
 		}catch( std::exception& ex ){
-			std::cout << "Open failed " << ex.what() << std::endl;
+			logger.error(std::string( "HttpObserver::open - Open failed ") + ex.what() );
 			return false;
 		}
 	}else{
@@ -68,7 +68,7 @@ bool HttpObserver::open( std::string name ){
 }	
 
 void HttpObserver::close() const {
-	std::cout << "HttpObserver::close" << std::endl;
+	logger.info( "HttpObserver::close" );
 	if(curl != NULL) {
 		curl_easy_cleanup(curl);
 	}
@@ -80,7 +80,7 @@ void HttpObserver::update(std::vector<ReadingPtr> readings){
 			wrapperRequest->addIntMember(std::string("BatchId"), batchId);
 			wrapperRequest->addDoubleMember(std::string((*reading_it)->getName()), (*reading_it)->getValue());
 			std::string postData = wrapperRequest->getJsonString();
-			std::cout << "HttpObserver::update " << postData << std::endl;
+			logger.info( std::string( "HttpObserver::update ") + postData );
 
 			std::string postResponse;		
 			std::string url = serverBaseURL + "readings";		
@@ -93,10 +93,10 @@ void HttpObserver::update(std::vector<ReadingPtr> readings){
 			
 			res = curl_easy_perform(curl);
 			if(res != CURLE_OK){
-				std::cout << "curl_easy_perform() failed" << curl_easy_strerror(res) << std::endl;
+				logger.error( std::string("HttpObserver::update- curl_easy_perform() failed ") + std::string(curl_easy_strerror(res)));		
 			}
 		}catch( std::exception& ex ){
-			std::cout << "Update failed " << ex.what() << std::endl;			
+			logger.error( std::string("HttpObserver::update- failed ") + ex.what());		
 		}
 	}		
 }

@@ -18,8 +18,8 @@ class ConnectedCo2Chart extends Component {
                             yAxes: [{
                                 ticks: {
                                     beginAtZero:true,
-									max: 20,
-									stepSize: 5,
+									max: 5000,
+									stepSize: 500,
                                 }
                             }],
                             xAxes: [{

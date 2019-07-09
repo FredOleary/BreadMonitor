@@ -7,12 +7,12 @@ ConsoleObserver::ConsoleObserver( Logger& loggerIn) : logger(loggerIn){
 }
 	
 bool ConsoleObserver::open( std::string name ){
-	logger.info( "console_observer::open");
+	logger.info( "ConsoleObserver::open");
 	return true;
 }	
 
 void ConsoleObserver::close() const {
-	logger.info( "console_observer::close" );
+	logger.info( "ConsoleObserver::close" );
 }
 void ConsoleObserver::update(std::vector<ReadingPtr> readings){
 	for (auto reading_it = readings.begin(); reading_it!=readings.end(); ++reading_it) {

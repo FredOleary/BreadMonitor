@@ -34,6 +34,7 @@
 #include "reading.h"
 #include "configuration.h"
 #include "console_logger.h"
+#include "utility.h"
 
 void parseOptions( int argc, char **argv, Configuration& configuration );
 void run( Configuration& configuration, Logger& logger, std::vector<Observer*> observers, std::vector<Sensor*> sensors );
@@ -41,8 +42,6 @@ void run( Configuration& configuration, Logger& logger, std::vector<Observer*> o
 int main(int argc, char **argv)
 {
 	ConsoleLogger logger;
-	logger.error( "Error Message" );
-	logger.warning( "Warning Message" );
 		
 	Configuration configuration;
 	std::vector<Observer*> observers;
@@ -53,17 +52,17 @@ int main(int argc, char **argv)
 	std::time_t end = configuration.getEndTime();
 	
 	std::string startMessage = "BreadMonitor for " + configuration.getName() +
-		" starting at " + std::asctime(std::localtime(&start)) + 
-		" ending at " + std::asctime(std::localtime(&end)) ;
+		" starting at " + stripTimeLinefeed(std::asctime(std::localtime(&start)))+ 
+		" ending at " + stripTimeLinefeed(std::asctime(std::localtime(&end))) ;
 	logger.info( startMessage );
  	
-   	std::unique_ptr<HttpObserver> httpObserverPtr(new HttpObserver(configuration));
+   	std::unique_ptr<HttpObserver> httpObserverPtr(new HttpObserver(logger, configuration));
  	observers.push_back(httpObserverPtr.get());
 
    	std::unique_ptr<ConsoleObserver> ConsoleObserverPtr(new ConsoleObserver(logger));
   	observers.push_back(ConsoleObserverPtr.get());
 	
-  	std::unique_ptr<CO2Sensor> co2SensorPtr(new CO2Sensor());
+  	std::unique_ptr<CO2Sensor> co2SensorPtr(new CO2Sensor(logger));
  	sensors.push_back(co2SensorPtr.get());
  	run( configuration, logger, observers, sensors );
 	
@@ -98,15 +97,25 @@ void parseOptions( int argc, char **argv, Configuration& configuration ){
 }
 
 void run( Configuration& configuration, Logger& logger, std::vector<Observer*> observers, std::vector<Sensor*> sensors ){
+bool inLoop = true;
+
 	// Open observers
 	for (auto it = observers.begin(); it!=observers.end(); ++it) {
 		if( !(*it)->open( configuration.getName())){
 			// Observer failed: - exit
+			inLoop = false;
 			logger.error("Failed to open one or more observers - exiting....");
 		}
 	}	
-	bool foo = true;
-	while(foo){
+	// Open sensors
+	for (auto it = sensors.begin(); it!=sensors.end(); ++it) {
+		if( !(*it)->open( "/dev/serial0" )){
+			// sensor failed: - exit
+			inLoop = false;
+			logger.error("Failed to open one or more sensors - exiting....");
+		}
+	}	
+	while(inLoop){
 		std::time_t currentTime = std::time(nullptr);
 		if( std::difftime( configuration.getEndTime(), currentTime ) > 0){
 			// Take sensor reading
@@ -120,11 +129,15 @@ void run( Configuration& configuration, Logger& logger, std::vector<Observer*> o
 			}		
 
 			sleep(10);
-			//foo = false;
+			//inLoop = false;
 		}else{
 			break;
 		}
 	}
+	// Close sensors
+	for (auto it = sensors.begin(); it!=sensors.end(); ++it) {
+		(*it)->close( );
+	}	
 	// Close observers
 	for (auto it = observers.begin(); it!=observers.end(); ++it) {
 		(*it)->close( );
