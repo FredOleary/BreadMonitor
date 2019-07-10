@@ -1,5 +1,6 @@
 var express = require('express');
 const db = require('../models/index');
+var batchData = require('../utilities/batchData');
 const Reading = db.sequelize.models.Reading;
 var router = express.Router();
 
@@ -20,6 +21,7 @@ router.post('/', function(req, res, next) {
     BatchId:req.body.BatchId
   }).then( newReading => {
     console.log( newReading.co2);
+    batchData.update(newReading.BatchId )
     res.send(newReading);
   }).catch( err =>{
     next(err);

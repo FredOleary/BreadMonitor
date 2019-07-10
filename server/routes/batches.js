@@ -1,4 +1,7 @@
 var express = require('express');
+var smsMessage = require('../utilities/twilio');
+var batchData = require('../utilities/batchData');
+
 const db = require('../models/index');
 const Batch = db.sequelize.models.Batch;
 var router = express.Router();
@@ -21,6 +24,9 @@ router.post('/', function(req, res, next) {
     endDate:endDate
    }).then( newBatch => {
     console.log( newBatch.name);
+    let startDate = (new Date( newBatch.createdAt)).toLocaleString();
+    batchData.addBatch( newBatch);
+//    smsMessage.sendMessage("Bread " + newBatch.name + " created at " + startDate );
     res.send(newBatch);
   }).catch( err =>{
     next(err);
