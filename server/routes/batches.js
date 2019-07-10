@@ -15,8 +15,10 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
+  let endDate = new Date( req.body.endDate);
   return Batch.create({
-    name:req.body.name
+    name:req.body.name,
+    endDate:endDate
    }).then( newBatch => {
     console.log( newBatch.name);
     res.send(newBatch);

@@ -27,6 +27,7 @@
 #include <vector>
 #include <memory>
 #include <unistd.h>
+#include <wiringPi.h>
 #include "observer.h"
 #include "http_observer.h"
 #include "console_observer.h"
@@ -35,14 +36,19 @@
 #include "configuration.h"
 #include "console_logger.h"
 #include "utility.h"
+#include "LED.h"
 
 void parseOptions( int argc, char **argv, Configuration& configuration );
-void run( Configuration& configuration, Logger& logger, std::vector<Observer*> observers, std::vector<Sensor*> sensors );
+void run( Configuration& configuration, LED& readingLED, Logger& logger, std::vector<Observer*> observers, std::vector<Sensor*> sensors );
 
 int main(int argc, char **argv)
 {
 	ConsoleLogger logger;
-		
+	
+	wiringPiSetup() ;
+	
+	LED readingLED;
+	
 	Configuration configuration;
 	std::vector<Observer*> observers;
 	std::vector<Sensor*> sensors;
@@ -64,7 +70,7 @@ int main(int argc, char **argv)
 	
   	std::unique_ptr<CO2Sensor> co2SensorPtr(new CO2Sensor(logger));
  	sensors.push_back(co2SensorPtr.get());
- 	run( configuration, logger, observers, sensors );
+ 	run( configuration, readingLED, logger, observers, sensors );
 	
 	return 0;
 }
@@ -96,7 +102,7 @@ void parseOptions( int argc, char **argv, Configuration& configuration ){
 	}
 }
 
-void run( Configuration& configuration, Logger& logger, std::vector<Observer*> observers, std::vector<Sensor*> sensors ){
+void run( Configuration& configuration, LED& readingLED, Logger& logger, std::vector<Observer*> observers, std::vector<Sensor*> sensors ){
 bool inLoop = true;
 
 	// Open observers
@@ -118,6 +124,7 @@ bool inLoop = true;
 	while(inLoop){
 		std::time_t currentTime = std::time(nullptr);
 		if( std::difftime( configuration.getEndTime(), currentTime ) > 0){
+			readingLED.turnON();
 			// Take sensor reading
 			logger.info( "Reading....");
 			for (auto sensor_it = sensors.begin(); sensor_it!=sensors.end(); ++sensor_it) {
@@ -127,7 +134,7 @@ bool inLoop = true;
 					(*observer_it)->update( readings);
 				}		
 			}		
-
+			readingLED.turnOFF();
 			sleep(10);
 			//inLoop = false;
 		}else{

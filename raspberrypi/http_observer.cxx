@@ -28,6 +28,7 @@ HttpObserver::HttpObserver( Logger& loggerIn, Configuration configuration ) : lo
 		headers = curl_slist_append(headers, "Content-Type: application/json;charset=utf-8");		
 		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 		serverBaseURL = configuration.getServerURL();
+		endDate= configuration.getEndTime();
 	}
 }	
 bool HttpObserver::open( std::string name ){
@@ -36,6 +37,8 @@ bool HttpObserver::open( std::string name ){
 		try{
 			std::unique_ptr<JsonWrapper> wrapperRequest(JsonWrapper::Create());
 			wrapperRequest->addStringMember(std::string("name"), name);
+			wrapperRequest->addStringMember(std::string("endDate"), std::asctime( std::localtime(&endDate )));
+			
 			std::string postData = wrapperRequest->getJsonString();
 			logger.info( std::string("HttpObserver::open - Batch: " + postData ) );
 			

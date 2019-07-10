@@ -5,7 +5,6 @@ import {batchesActions} from '../actions/batchesAction';
 import { connect } from "react-redux";
 import {bindActionCreators} from "redux";
 import { connectableObservableDescriptor } from '../../../../../Library/Caches/typescript/3.5/node_modules/rxjs/internal/observable/ConnectableObservable';
-//import { fromEventPattern } from 'rxjs';
 
 const breadLogo = require('.././images/bread_icon.png');
 
@@ -65,7 +64,9 @@ function mapDispatchToProps(dispatch) {
 class ConnectedToolbar extends Component{
     componentDidMount() {
         console.log("ConnectedToolbar-componentDidMount");
+        this.selectedItem = null;
         this.props.batchesActions.fetchBatches();
+        setInterval( this.onAutoUpdate.bind(this), 10000);
      }
     render(){
         return (
@@ -83,6 +84,7 @@ class ConnectedToolbar extends Component{
         )
     }
     onSelectChange( selectedItem ){
+        this.selectedItem = selectedItem;
         if( selectedItem){
             this.props.batchesActions.updateSelectedBatch(selectedItem);
             this.props.batchesActions.fetchReadingsForBatch( selectedItem.value);
@@ -95,6 +97,21 @@ class ConnectedToolbar extends Component{
         this.props.batchesActions.fetchReadingsForBatch( this.props.selectedBatch.value);
     //    console.log("onRefresh");
     }
+    onAutoUpdate(){
+        if( this.selectedItem ){
+            let batchEndTime = new Date( this.selectedItem.endDate);
+            let nowDate = new Date();
+            if( batchEndTime > nowDate){
+                console.log("refreshing");      
+                this.props.batchesActions.fetchReadingsForBatch( this.props.selectedBatch.value);                        
+            }else{
+                console.log("batch has ended");               
+            }
+
+        }else{
+            console.log("No batch");
+        }
+      }
 }
 const Toolbar = connect(
     mapStateToProps,

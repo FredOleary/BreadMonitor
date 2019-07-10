@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ctime>
 #include "observer.h"
 #include <curl/curl.h>
 #include "configuration.h"
@@ -10,6 +11,7 @@ class HttpObserver : public Observer{
 		CURL *curl;	
 		CURLcode res;
 		std::string serverBaseURL;
+		std::time_t endDate;
 		int batchId;
 		
 	public:
