@@ -3,16 +3,16 @@
 #Change output_file_name.a below to your desired executible filename
 
 #Set all your object files (the object files of all the .c files in your project, e.g. main.o my_sub_functions.o )
-OBJ = bread_monitor.o http_observer.o co2_sensor.o configuration.o
+OBJ = bread_monitor.o http_observer.o co2_sensor.o configuration.o console_observer.o json_wrapper.o co2_reading.o console_logger.o utility.o
 
 #Set any dependant header files so that if they are edited they cause a complete re-compile (e.g. main.h some_subfunctions.h some_definitions_file.h ), or leave blank
-DEPS = http_observer.h observer.h reading.h sensor.h co2_sensor.h configuration.h
+DEPS = http_observer.h observer.h reading.h sensor.h co2_sensor.h configuration.h console_observer.h json_wrapper.h co2_reading.h logger.h console_logger.h utility.h LED.h
 
 #Any special libraries you are using in your project (e.g. -lbcm2835 -lrt `pkg-config --libs gtk+-3.0` ), or leave blank
 LIBS = -lwiringPi -lcurl
 
 #Set any compiler flags you want to use (e.g. -I/usr/include/somefolder `pkg-config --cflags gtk+-3.0` ), or leave blank
-CFLAGS = -lrt
+CFLAGS = -lrt -Wno-psabi -g
 
 #Set the compiler you are using ( gcc for C or g++ for C++ )
 CC = g++
