@@ -18,6 +18,11 @@ class ConnectedCo2Chart extends Component {
                             yAxes: [{
                                 id:'A',
                                 position:'left',
+                                scaleLabel:{
+                                    display:true,
+                                    labelString:"ppm",
+                                    fontColor: "blue"
+                                },
                                 ticks: {
                                     beginAtZero:true,
 									max: 10000,
@@ -26,7 +31,12 @@ class ConnectedCo2Chart extends Component {
                             },{
                                 id:'B',
                                 position:'right',
-                                ticks: {
+                                scaleLabel:{
+                                    display:true,
+                                    labelString:"delta ppm",
+                                    fontColor: "red"
+                                },
+                               ticks: {
                                     beginAtZero:true,
 									max: 800,
 									stepSize: 80,

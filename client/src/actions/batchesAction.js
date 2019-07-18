@@ -23,7 +23,7 @@ function fetchBatches() {
                     let batches = response.data.map( entry =>{
                         let batchDate = new Date(entry.createdAt);
                         let label = entry.name + ' ' + batchDate.toLocaleString();
-                        return ({value:entry.id, label:label, endDate:new Date(entry.endDate)});
+                        return ({entry:entry, value:entry.id, label:label, endDate:new Date(entry.endDate)});
                     });
 					dispatch(updateBatches(batches));
 				}else{

@@ -6,7 +6,11 @@ module.exports = (sequelize, DataTypes) => {
     whiteFlourGms:{type: DataTypes.DECIMAL, allowNull:true},
     waterGms:{type: DataTypes.DECIMAL, allowNull:true},
     instantYeastGms:{type: DataTypes.DECIMAL, allowNull:true},
-    saltGms:{type: DataTypes.DECIMAL, allowNull:true}
+    saltGms:{type: DataTypes.DECIMAL, allowNull:true},
+    waterTempDegF:{type: DataTypes.DECIMAL, allowNull:true},
+    fermentationTimeMins:{type: DataTypes.DECIMAL, allowNull:true},
+    proofTimeMins:{type: DataTypes.DECIMAL, allowNull:true}
+
   }, {});
   Batch.associate = function(models) {
     Batch.hasMany(models.Reading);
