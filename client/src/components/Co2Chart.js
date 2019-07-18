@@ -16,10 +16,20 @@ class ConnectedCo2Chart extends Component {
                         maintainAspectRatio: true,
                         scales: {
                             yAxes: [{
+                                id:'A',
+                                position:'left',
                                 ticks: {
                                     beginAtZero:true,
-									max: 3000,
-									stepSize: 200,
+									max: 10000,
+									stepSize: 1000,
+                                }
+                            },{
+                                id:'B',
+                                position:'right',
+                                ticks: {
+                                    beginAtZero:true,
+									max: 800,
+									stepSize: 80,
                                 }
                             }],
                             xAxes: [{
@@ -42,6 +52,9 @@ class ConnectedCo2Chart extends Component {
         );
     }
     getChartData = () =>{
+        return this.props.chartData;
+    }
+    getDeltaChartData =() =>{
         return this.props.chartData;
     }
 }

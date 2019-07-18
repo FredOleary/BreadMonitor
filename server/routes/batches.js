@@ -19,10 +19,15 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
   let endDate = new Date( req.body.endDate);
-  return Batch.create({
-    name:req.body.name,
-    endDate:endDate
-   }).then( newBatch => {
+  let batch = {};
+  if( req.body.hasOwnProperty("recipe")){
+    batch = {...req.body.recipe};
+  }
+  batch.name = req.body.name;
+  batch.endDate = endDate;
+
+  return Batch.create(batch)
+  .then( newBatch => {
     console.log( newBatch.name);
     let startDate = (new Date( newBatch.createdAt)).toLocaleString();
     batchData.addBatch( newBatch);

@@ -85,7 +85,24 @@ const createChartData = readings => {
 		dataset.pointRadius=0;
         dataset.borderColor='rgb(53, 91, 183)';
         dataset.label = "CO2";
+        dataset.yAxisID = 'A';
         chartData.datasets.push( dataset);
+        let deltaDataset = {};
+        deltaDataset.data = readings.co2.map( (current, index, array) =>{
+            if( index > 0 ){
+                return Math.abs(array[index] - array[index-1]);
+            }else{
+                return 0;
+            }
+         });
+        deltaDataset.backgroundColor='rgb(183, 53, 91)';
+        deltaDataset.fill=false;
+		deltaDataset.pointRadius=0;
+        deltaDataset.borderColor='rgb(183, 53, 91)';
+        deltaDataset.label = "Delta CO2";
+        deltaDataset.yAxisID = 'B';
+        chartData.datasets.push( deltaDataset);
+       
     }
 
 	return chartData;
