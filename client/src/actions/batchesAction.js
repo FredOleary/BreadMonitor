@@ -49,7 +49,7 @@ function fetchReadingsForBatch( batchId) {
                          return entry.co2;
                     });
                     let createdAt = response.data.map( entry =>{
-                        return (new Date(entry.createdAt)).toLocaleTimeString();
+                        return (new Date(entry.createdAt)).toLocaleString();
                     });
                     readings.co2 = co2;
                     readings.createdAt = createdAt;
