@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     name: {type: DataTypes.STRING, allowNull: false},
     endDate: {type: DataTypes.DATE, allowNull: false},
     whiteFlourGms:{type: DataTypes.DECIMAL, allowNull:true},
+    wholeWheatFlourGms:{type: DataTypes.DECIMAL, allowNull:true},
     waterGms:{type: DataTypes.DECIMAL, allowNull:true},
     instantYeastGms:{type: DataTypes.DECIMAL, allowNull:true},
     saltGms:{type: DataTypes.DECIMAL, allowNull:true},

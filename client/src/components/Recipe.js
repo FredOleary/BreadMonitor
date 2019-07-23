@@ -13,6 +13,7 @@ class ConnectedRecipe extends Component{
                 <RecipeEntry label="Batch" value={this.getBatchInfo("name")}/>
                 <br/>
                 <RecipeEntry label="White flour (gms)" value={this.getBatchInfo("whiteFlourGms")}/>
+                <RecipeEntry label="Whole Wheat flour (gms)" value={this.getBatchInfo("wholeWheatFlourGms")}/>
                 <RecipeEntry label="Instant Yeast (gms)" value={this.getBatchInfo("instantYeastGms")}/>
                 <RecipeEntry label="Salt (gms)" value={this.getBatchInfo("saltGms")}/>
                 <RecipeEntry label="Water (gms)" value={this.getBatchInfo("waterGms")}/>
