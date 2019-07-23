@@ -6,3 +6,6 @@
 
 #VS Code settings
 .vscode/
+
+# database credentials
+config/config.json
