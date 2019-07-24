@@ -9,3 +9,6 @@
 
 # database credentials
 config/config.json
+
+#twilio credentials
+utilities/twiloAuth.js

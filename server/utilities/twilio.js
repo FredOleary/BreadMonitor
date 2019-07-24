@@ -1,14 +1,11 @@
 var twilio = require('twilio');
-
+var twiloAuth = require('./twiloAuth');
 var smsMessage ={};
-
-var accountSid = 'ACcc2a05b91fc41b597b929b7a60dddb84'; // Your Account SID from www.twilio.com/console
-var authToken = 'XXXXXXXXXXXX';   // Your Auth Token from www.twilio.com/console
 
 smsMessage.sendMessage = ( message) =>{
     console.log("SmsMessage " + message);
 
-    var client = new twilio(accountSid, authToken);
+    var client = new twilio(twiloAuth.accountSid, twiloAuth.authToken);
 
     client.messages.create({
         body: message,
