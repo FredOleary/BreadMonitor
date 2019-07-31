@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     saltGms:{type: DataTypes.DECIMAL, allowNull:true},
     waterTempDegF:{type: DataTypes.DECIMAL, allowNull:true},
     fermentationTimeMins:{type: DataTypes.DECIMAL, allowNull:true},
-    proofTimeMins:{type: DataTypes.DECIMAL, allowNull:true}
+    proofTimeMins:{type: DataTypes.DECIMAL, allowNull:true},
+    alertedDate: {type: DataTypes.DATE, allowNull: true}
 
   }, {});
   Batch.associate = function(models) {

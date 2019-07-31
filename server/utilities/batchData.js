@@ -36,7 +36,7 @@ batchData.update = (batchId) => {
 // 1000 are detected. (This may result from CO2 bubbles bursting)
 // Note that readings from the CO2 sensor are in ppm/100. E.g. a reading from the sensor
 // of 61 corresponds to a C02 ppm value of 610
-const deltaReadingThreshold = 1000;
+const deltaReadingThreshold = 100;
 const noOfDeltas = 2;
 batchData.checkFermentation =(batchInfo, readings) => {
 
@@ -54,6 +54,10 @@ batchData.checkFermentation =(batchInfo, readings) => {
             count++;
             if( count >= noOfDeltas){
                 batchInfo.alertMsgSent = true;
+                batchInfo.batch.update(
+                    { alertedDate: new Date( readings[idx].createdAt) },
+                    { where: { id: batchInfo.batch.id } }
+                );
                 // Send a message
                 let fermentationStartDate = new Date( readings[0].createdAt);
                 let fermentationEndDate = new Date( readings[idx].createdAt);

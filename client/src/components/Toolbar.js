@@ -51,9 +51,15 @@ const imageStyle ={
     maxWidth:'100%',
     maxHeight:'100%'
 }
+const duration ={
+    marginLeft:'30px',
+    marginTop:'auto',
+    marginBottom:'auto',
+ //   textAlign:'center'
 
+}
 const mapStateToProps = state => {
-    return { batches: state.batches, selectedBatch: state.selectedBatch };
+    return { batches: state.batches, selectedBatch: state.selectedBatch, chartData: state.chartData };
   };
 function mapDispatchToProps(dispatch) {
     return {
@@ -77,6 +83,9 @@ class ConnectedToolbar extends Component{
                 <div style={refreshButton}>
                     <button disabled ={this.isSelectedEmpty()} onClick={this.onRefresh.bind(this)} style ={{height:30, fontSize:'16px'}}>Refresh</button>
                 </div>
+                <div style ={duration}>
+                    Duration (hrs): {this.getDuration()}
+                </div>
                 <div style = {logo}>
                     <img style={imageStyle} src={breadLogo} alt="Bread icon" />
                 </div>
@@ -92,6 +101,16 @@ class ConnectedToolbar extends Component{
     }
     isSelectedEmpty(){
         return JSON.stringify(this.props.selectedBatch) === JSON.stringify({});
+    }
+    getDuration(){
+        if( ! this.isSelectedEmpty()){
+            if( this.props.chartData.hasOwnProperty("labels") && this.props.chartData.labels.length > 0 ){
+                let startDate = new Date( this.props.chartData.labels[0]);
+                let endDate = new Date( this.props.chartData.labels[this.props.chartData.labels.length-1]);
+                return ((endDate.getTime() - startDate.getTime())/(1000*60*60)).toFixed(2);
+            }
+        }
+        return null;
     }
     onRefresh(){
         this.props.batchesActions.fetchReadingsForBatch( this.props.selectedBatch.value);

@@ -7,13 +7,27 @@ const mapStateToProps = state => {
     return { chartData: state.chartData, selectedBatch: state.selectedBatch };
   };
 
-const getFermentationFraction = (labels, selectedBatch) =>{
+const getAlertMessageFraction = (labels, selectedBatch) =>{
+    if( labels.length > 0 ){
+        let startDate = Date.parse(labels[0]);
+        let endDate = Date.parse(labels[labels.length-1]);
+        if(selectedBatch.hasOwnProperty("entry") && selectedBatch.entry.hasOwnProperty("alertedDate") ){
+            let alertedDate = Date.parse(selectedBatch.entry.alertedDate);
+            if( alertedDate < endDate ){
+                let fraction = (alertedDate-startDate)/(endDate-startDate);
+                return fraction;
+            }
+        }
+    }
+    return 0;
+ }
+ const getFermentationFraction = (labels, selectedBatch) =>{
     if( labels.length > 0 ){
         let startDate = Date.parse(labels[0]);
         let endDate = Date.parse(labels[labels.length-1]);
         if(selectedBatch.hasOwnProperty("entry") && selectedBatch.entry.hasOwnProperty("fermentationTimeMins") ){
             let fermentationTime = selectedBatch.entry.fermentationTimeMins * 60 * 1000 + startDate;
-            if( startDate < endDate ){
+            if( fermentationTime < endDate ){
                 let fraction = (fermentationTime-startDate)/(endDate-startDate);
                 return fraction;
             }
@@ -21,7 +35,6 @@ const getFermentationFraction = (labels, selectedBatch) =>{
     }
     return 0;
  }
-
 class ConnectedCo2Chart extends Component {
 
     componentWillMount() {
@@ -42,6 +55,22 @@ class ConnectedCo2Chart extends Component {
                 ctx.strokeStyle = '#20C020';
                 ctx.stroke();
                 ctx.restore();
+            }
+            let alertMessageFraction = getAlertMessageFraction( chart.data.labels, that.props.selectedBatch);
+            if( alertMessageFraction ){
+                const x = (chart.chartArea.right - chart.chartArea.left) * alertMessageFraction + chart.chartArea.left;
+                const topY = chart.scales['A'].top;
+                const bottomY = chart.scales['A'].bottom;
+                let ctx = chart.ctx;
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(x, topY);
+                ctx.lineTo(x, bottomY);
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#2020C0';
+                ctx.stroke();
+                ctx.restore();
+               
             }
           }
         });
@@ -76,8 +105,8 @@ class ConnectedCo2Chart extends Component {
                                 },
                                ticks: {
                                     beginAtZero:true,
-									max: 1000,
-									stepSize: 100,
+									max: 2000,
+									stepSize: 200,
                                 }
                             }],
                             xAxes: [{
