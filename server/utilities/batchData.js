@@ -38,6 +38,7 @@ batchData.update = (batchId) => {
 // of 61 corresponds to a C02 ppm value of 610
 const deltaReadingThreshold = 100;
 const noOfDeltas = 2;
+const minCO2Level = 1000;
 batchData.checkFermentation =(batchInfo, readings) => {
 
     deltaReadings = readings.map( (current, index, array) =>{
@@ -50,7 +51,7 @@ batchData.checkFermentation =(batchInfo, readings) => {
     let idx = 0;
     let count = 0;
     while( idx < deltaReadings.length){
-        if( deltaReadings[idx] > deltaReadingThreshold){
+        if( deltaReadings[idx] > deltaReadingThreshold && readings[idx] > minCO2Level){
             count++;
             if( count >= noOfDeltas){
                 batchInfo.alertMsgSent = true;
