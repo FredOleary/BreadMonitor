@@ -51,7 +51,7 @@ batchData.checkFermentation =(batchInfo, readings) => {
     let idx = 0;
     let count = 0;
     while( idx < deltaReadings.length){
-        if( deltaReadings[idx] > deltaReadingThreshold && readings[idx] > minCO2Level){
+        if( deltaReadings[idx] > deltaReadingThreshold && readings[idx].co2 > minCO2Level){
             count++;
             if( count >= noOfDeltas){
                 batchInfo.alertMsgSent = true;
