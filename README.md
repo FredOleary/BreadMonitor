@@ -7,3 +7,8 @@ Client is a React web application that graphically displays CO2 levels monitored
 
 ## Server
 Server is an ExpressJS server application that stores data collected by the Raspberry PI
+
+A sample screen is shown below
+
+![sample screen](./sample_screen.png)
+
